@@ -1,0 +1,25 @@
+{
+  "name": "draguo/dingtalk",
+  "description": "dingtalk sdk",
+  "require": {
+    "php": ">=5.5.9",
+    "guzzlehttp/guzzle": "^6.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Draguo\\Dingtalk\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Draguo\\Dingtalk\\Tests\\": "tests"
+    }
+  },
+  "authors": [
+    {
+      "name": "draguo",
+      "email": "draguo@sina.com"
+    }
+  ],
+  "license": "MIT"
+}
