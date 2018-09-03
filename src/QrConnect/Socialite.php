@@ -66,4 +66,14 @@ class Socialite extends BaseClient
             'sns_token' => $this->getSnsToken($persistent['openid'], $persistent['persistent_code'])
         ]);
     }
+
+    public function getRedirectUrl($url)
+    {
+        return $this->baseUri . '/connect/qrconnect?' . http_build_query([
+                'appid' => $this->appId,
+                'response_type' => 'code',
+                'scope' => 'snsapi_login',
+                'redirect_uri' => urlencode($url),
+            ]);
+    }
 }
