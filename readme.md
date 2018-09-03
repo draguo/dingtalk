@@ -10,8 +10,8 @@
 
 ## 请先阅读 [钉钉文档](https://open-doc.dingtalk.com/microapp/serverapi2)
 ## 功能列表
-* [x] [群机器人](#s2gvle)
-* [ ] 扫码登录
+* [x] 群机器人
+* [x] 扫码登录
 
 ## 群机器人
 ### 使用

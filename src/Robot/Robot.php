@@ -2,17 +2,15 @@
 
 namespace Draguo\Dingtalk\Robot;
 
+use Draguo\Dingtalk\Core\BaseClient;
 use Draguo\Dingtalk\Exceptions\BadRequestException;
 use Draguo\Dingtalk\Exceptions\Exception;
 use Draguo\Dingtalk\Message\Message;
 use Draguo\Dingtalk\Message\Text;
-use Draguo\Dingtalk\Supports\HasHttpRequest;
 
-class Robot
+class Robot extends BaseClient
 {
-    use HasHttpRequest;
 
-    protected $baseUri = 'https://oapi.dingtalk.com';
     protected $token;
     protected $users;
 

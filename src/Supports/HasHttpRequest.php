@@ -56,10 +56,15 @@ trait HasHttpRequest
      * @param array $options
      *
      * @return array|string
+     * @throws \Exception
      */
     protected function request($method, $endpoint, $options = [])
     {
-        return $this->unwrapResponse($this->getHttpClient($this->getBaseOptions())->{$method}($endpoint, $options));
+        $response = $this->unwrapResponse($this->getHttpClient($this->getBaseOptions())->{$method}($endpoint, $options));
+        if ($response['errcode'] == 0) {
+            return $response;
+        }
+        throw new \Exception($response['errmsg'], $response['errcode']);
     }
 
     /**
