@@ -20,7 +20,7 @@ class User extends BaseClient
     public function getAccessToken()
     {
         if (!$this->accessToken) {
-            $response = $this->get('/gettoken', ['appid' => $this->appId, 'appsecret' => $this->appSecret]);
+            $response = $this->get('/gettoken', ['corpid' => $this->appId, 'corpsecret' => $this->appSecret]);
             $this->accessToken = $response['access_token'];
         }
         return $this->accessToken;
@@ -31,7 +31,12 @@ class User extends BaseClient
         return $this->get('/user/getUseridByUnionid', [
             'access_token' => $this->getAccessToken(),
             'unionid' => $unionId
-        ]);
+        ])['userid'];
+    }
+
+    public function findByUnionId($unionId)
+    {
+        return $this->getUserInfo($this->getUserIdByUnionId($unionId));
     }
 
     public function getUserInfo($userId)
