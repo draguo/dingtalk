@@ -24,9 +24,13 @@ class Application
 
     public function user()
     {
-
         $appId = $this->config->get('corpid');
         $appSecret = $this->config->get('corpsecret');
         return new User($appId, $appSecret);
+    }
+
+    public function microapp($name='default')
+    {
+        return new Microapp($name, $this->config);
     }
 }

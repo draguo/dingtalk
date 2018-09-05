@@ -3,15 +3,20 @@
 namespace Draguo\Dingtalk\Robot;
 
 use Draguo\Dingtalk\Core\BaseClient;
-use Draguo\Dingtalk\Exceptions\BadRequestException;
 use Draguo\Dingtalk\Exceptions\Exception;
 use Draguo\Dingtalk\Message\Message;
 use Draguo\Dingtalk\Message\Text;
 
 class Robot extends BaseClient
 {
-
+    /**
+     * @var string
+     */
     protected $token;
+
+    /**
+     * @var array
+     */
     protected $users;
 
     /**
@@ -34,25 +39,19 @@ class Robot extends BaseClient
         }
 
         if (!$message instanceof Message) {
-            throw new Exception('params must instanceof message');
+            throw new Exception('send params must instanceof message');
         }
 
         if ($this->users) {
             $message->setUsers($this->users);
         }
 
-        $response = $this->postJson('robot/send?access_token=' . $this->token, $message->getParams());
-
-        if ($response['errcode'] != 0) {
-            throw new BadRequestException(json_encode($response));
-        }
-
-        return $response;
+        return $this->postJson("robot/send?access_token={$this->token}", $message->getParams());
     }
 
     /**
      * @param string|array $users
-     * 所有人的传 all
+     * 所有人的传 all 或转换为 array $users
      * @return $this
      */
     public function to($users = null)

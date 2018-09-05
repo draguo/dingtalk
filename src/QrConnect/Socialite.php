@@ -7,23 +7,45 @@ use Draguo\Dingtalk\Core\BaseClient;
 class Socialite extends BaseClient
 {
 
+    /**
+     * @var string
+     */
     protected $appId;
+
+    /**
+     * @var string
+     */
     protected $appSecret;
+
+    /**
+     * @var string
+     */
     protected $accessToken;
 
+    /**
+     * Socialite constructor.
+     * @param $appId string
+     * @param $appSecret string
+     */
     public function __construct($appId, $appSecret)
     {
         $this->appId = $appId;
         $this->appSecret = $appSecret;
     }
 
-    // 单个 app 可用，和企业调用的 access_token 不一样
-    public function getAccessToken()
+    /**
+     * 单个 app 可用，和企业调用的 access_token 不一样
+     * @return string access_token
+     */
+    protected function getSnsAccessToken()
     {
         if (!$this->accessToken) {
-            $response = $this->get('/sns/gettoken', ['appid' => $this->appId, 'appsecret' => $this->appSecret]);
-            $this->accessToken = $response['access_token'];
+            $this->accessToken = $this->get('/sns/gettoken', [
+                'appid' => $this->appId,
+                'appsecret' => $this->appSecret
+            ])['access_token'];
         }
+
         return $this->accessToken;
     }
 
@@ -39,7 +61,7 @@ class Socialite extends BaseClient
      */
     public function getPersistentCode($tmp_auth_code)
     {
-        return $this->postJson('/sns/get_persistent_code?access_token=' . $this->getAccessToken(), compact('tmp_auth_code'));
+        return $this->postJson("/sns/get_persistent_code?access_token={$this->getSnsAccessToken()}", compact('tmp_auth_code'));
     }
 
     /**
@@ -49,7 +71,7 @@ class Socialite extends BaseClient
      */
     public function getSnsToken($openid, $persistent_code)
     {
-        $response = $this->postJson('/sns/get_sns_token?access_token=' . $this->getAccessToken(),
+        $response = $this->postJson("/sns/get_sns_token?access_token={$this->getSnsAccessToken()}",
             compact('openid', 'persistent_code'));
         return $response['sns_token'];
     }
@@ -57,7 +79,6 @@ class Socialite extends BaseClient
     /**
      * @param $code 前台获取的 code
      * @return array|string
-     * @throws \Exception
      */
     public function getUserInfo($code)
     {
@@ -69,10 +90,10 @@ class Socialite extends BaseClient
 
     public function getRedirectUrl($url)
     {
-        return $this->baseUri . '/connect/qrconnect?' . http_build_query([
+        return "{$this->baseUri}/connect/qrconnect?" . http_build_query([
                 'appid' => $this->appId,
                 'response_type' => 'code',
                 'scope' => 'snsapi_login',
-            ]) . "&redirect_uri={$url}";
+            ]) . "&redirect_uri'{$url}";
     }
 }
