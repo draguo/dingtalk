@@ -13,13 +13,11 @@ use Draguo\Dingtalk\Supports\Config;
 class Microapp extends BaseClient
 {
     protected $agentId;
-    protected $appId;
     protected $params = [];
 
-    public function __construct($name, Config $config)
+    public function __construct($token, $name, Config $config)
     {
-        $this->appId = $config->get('corpid');
-        $this->appSecret = $config->get('corpsecret');
+        parent::__construct($token);
         $this->agentId = $config->get('microapp.' . $name);
     }
 
@@ -35,7 +33,7 @@ class Microapp extends BaseClient
         }
 
         return $this->postJson('/topapi/message/corpconversation/asyncsend_v2?access_token=' .
-            $this->getAccessToken($this->appId, $this->appSecret), array_merge([
+            $this->getAccessToken(), array_merge([
             'agent_id' => $this->agentId,
             'msg' => $message->getParams(),
         ], $this->params));

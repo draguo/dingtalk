@@ -6,20 +6,11 @@ use Draguo\Dingtalk\Core\BaseClient;
 
 class User extends BaseClient
 {
-    protected $appId;
-    protected $appSecret;
-    protected $accessToken;
-
-    public function __construct($appId, $appSecret)
-    {
-        $this->appId = $appId;
-        $this->appSecret = $appSecret;
-    }
 
     public function getUserIdByUnionId($unionId)
     {
         return $this->get('/user/getUseridByUnionid', [
-            'access_token' => $this->getAccessToken($this->appId, $this->appSecret),
+            'access_token' => $this->getAccessToken(),
             'unionid' => $unionId
         ])['userid'];
     }
@@ -32,7 +23,7 @@ class User extends BaseClient
     public function getUserInfo($userId)
     {
         return $this->get('/user/get', [
-            'access_token' => $this->getAccessToken($this->appId, $this->appSecret),
+            'access_token' => $this->getAccessToken(),
             'userid' => $userId
         ]);
     }

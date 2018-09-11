@@ -9,15 +9,26 @@ abstract class BaseClient
     protected $baseUri = 'https://oapi.dingtalk.com';
 
     use HasHttpRequest;
-    protected $accessToken;
+    private $accessToken;
 
-    // 单个 app 可用，和企业调用的 access_token 不一样
-    public function getAccessToken($appId, $appSecret)
+    public function __construct($token = null)
     {
-        if (!$this->accessToken) {
-            $response = $this->get('/gettoken', ['corpid' => $appId, 'corpsecret' => $appSecret]);
-            $this->accessToken = $response['access_token'];
-        }
+        $this->setAccessToken($token);
+    }
+
+    /**
+     * @param string $token
+     */
+    public function setAccessToken($token = '')
+    {
+        $this->accessToken = $token;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getAccessToken()
+    {
         return $this->accessToken;
     }
 }

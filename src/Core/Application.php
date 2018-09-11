@@ -8,7 +8,7 @@ use Draguo\Dingtalk\Supports\Config;
 
 class Application
 {
-    protected $config;
+    public $config;
 
     public function __construct($config)
     {
@@ -24,13 +24,13 @@ class Application
 
     public function user()
     {
-        $appId = $this->config->get('corpid');
-        $appSecret = $this->config->get('corpsecret');
-        return new User($appId, $appSecret);
+        $token = new AccessToken($this);
+        return new User($token->getAccessToken());
     }
 
-    public function microapp($name='default')
+    public function microapp($name = 'default')
     {
-        return new Microapp($name, $this->config);
+        $token = new AccessToken($this);
+        return new Microapp($token->getAccessToken(), $name, $this->config);
     }
 }
