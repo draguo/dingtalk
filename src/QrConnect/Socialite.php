@@ -94,6 +94,6 @@ class Socialite extends BaseClient
                 'appid' => $this->appId,
                 'response_type' => 'code',
                 'scope' => 'snsapi_login',
-            ]) . "&redirect_uri'{$url}";
+            ]) . "&redirect_uri={$url}";
     }
 }
