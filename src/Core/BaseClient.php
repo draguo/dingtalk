@@ -19,7 +19,7 @@ abstract class BaseClient
     /**
      * @param string $token
      */
-    public function setAccessToken($token = '')
+    protected function setAccessToken($token = '')
     {
         $this->accessToken = $token;
     }
@@ -27,7 +27,7 @@ abstract class BaseClient
     /**
      * @return null|string
      */
-    public function getAccessToken()
+    protected function getAccessToken()
     {
         return $this->accessToken;
     }

@@ -2,8 +2,10 @@
 
 namespace Draguo\Dingtalk\Core;
 
+use Draguo\Dingtalk\Contacts\Department;
 use Draguo\Dingtalk\Contacts\User;
 use Draguo\Dingtalk\QrConnect\Socialite;
+use Draguo\Dingtalk\SmartWork\Employee;
 use Draguo\Dingtalk\Supports\Config;
 
 class Application
@@ -32,5 +34,17 @@ class Application
     {
         $token = new AccessToken($this);
         return new Microapp($token->getAccessToken(), $name, $this->config);
+    }
+
+    public function employee()
+    {
+        $token = new AccessToken($this);
+        return new Employee($token->getAccessToken());
+    }
+
+    public function department()
+    {
+        $token = new AccessToken($this);
+        return new Department($token->getAccessToken());
     }
 }
