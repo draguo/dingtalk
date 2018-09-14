@@ -88,6 +88,12 @@ class Socialite extends BaseClient
         ]);
     }
 
+    /**
+     * @param $url
+     * @return string
+     * 跳转单独页面扫码方式
+     * $url 需自行编码
+     */
     public function getRedirectUrl($url)
     {
         return "{$this->baseUri}/connect/qrconnect?" . http_build_query([

@@ -1,4 +1,3 @@
-
 <div data-type="alignment" data-value="center" style="text-align:center">
   <h1 id="ug5gkf" data-type="h">
     <a class="anchor" id="钉钉-sdk" href="#ug5gkf"></a>钉钉 SDK</h1>
@@ -8,24 +7,40 @@
   <div data-type="p"></div>
 </div>
 
-## 请先阅读 [钉钉文档](https://open-doc.dingtalk.com/microapp/serverapi2)
-## 功能列表
-* [x] 群机器人
-* [x] 扫码登录
 
+## 请先阅读 [钉钉文档](https://open-doc.dingtalk.com/microapp/serverapi2)
+
+## 配置
+```php
+$config = [
+    'corpid' => '',
+    'corpsecret' => '',
+    'socialite' => [
+        'dashboard' => [
+        'appid' => '',
+        'appserect' => '',
+        ]
+    ], 
+    'microapp' => [
+        'default' => '191027579',
+    ]
+];
+```
 ## 群机器人
 ### 使用
 
+首先[获取 access\_toekn](https://open-doc.dingtalk.com/microapp/serverapi2/qf2nxq)
+
 ```php
-// token 获取方法请参考上面的文档，传入 access_token= 后面的部分
-$ding = new Robot($token);
+// 传入 access_token= 后面的部分
+$ding = new Robot($access_token);
 ```
 
 #### @功能
 
-to 方法是支持 @ 某人 或 @ 所有人，
-如果是 @ 指定人，可以是对应的手机号数组或以英文逗号分隔的字符串
-如果是 @ 所有人，传入字符串 all
+to 方法支持 @ 某人 或 @ 所有人，
+@ 指定人，可以是对应的手机号数组或以英文逗号分隔的字符串
+@ 所有人，传入字符串 all
 
 ### 消息类型
 
@@ -122,4 +137,50 @@ $feedCard = new FeedCard([
 ]);
 
 $result = $notice->send($feedCard);
+```
+
+
+## 扫码登录第三方Web网站
+
+```php
+/**
+ * @param $url 需自行编码
+ * @return string 单独页面扫码方式打开的地址
+ */
+$dingtalk->socialite('config.socialite.name')->getRedirectUrl($url);
+```
+
+### 通过 code 获取用户信息
+```php
+/**
+ * @param $code 前台获取的 code
+ * @return array|string 用户的信息
+*/
+$dingtalk->socialite('config.socialite.name')->getUserInfo($code);
+```
+
+## 智能人事
+### 所有在职员工的 id
+```php
+$dingtalk->employee()->all();
+```
+
+## 消息通知
+### 发送工作通知消息
+```php
+$dingtalk->microapp()->send();
+// todo 未完善
+$dingtalk->microapp()->to()->send();
+```
+
+## 通讯录
+### 用户管理
+```php
+// 获取用户信息
+$dingtalk->user()->getUserInfo($userId);
+```
+### 部门管理
+```php
+// 所有部门，会递归子部门
+$dingtalk->department()->all()
 ```
