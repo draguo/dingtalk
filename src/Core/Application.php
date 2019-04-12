@@ -11,6 +11,7 @@ use Draguo\Dingtalk\Supports\Config;
 class Application
 {
     public $config;
+    public $app = 'default';
 
     public function __construct($config)
     {
@@ -32,6 +33,7 @@ class Application
 
     public function microapp($name = 'default')
     {
+        $this->app = $name;
         $token = new AccessToken($this);
         return new Microapp($token->getAccessToken(), $name, $this->config);
     }

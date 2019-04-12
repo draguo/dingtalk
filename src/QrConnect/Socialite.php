@@ -18,11 +18,6 @@ class Socialite extends BaseClient
     protected $appSecret;
 
     /**
-     * @var string
-     */
-    protected $accessToken;
-
-    /**
      * Socialite constructor.
      * @param $appId string
      * @param $appSecret string
@@ -31,61 +26,6 @@ class Socialite extends BaseClient
     {
         $this->appId = $appId;
         $this->appSecret = $appSecret;
-    }
-
-    /**
-     * 单个 app 可用，和企业调用的 access_token 不一样
-     * @return string access_token
-     */
-    protected function getSnsAccessToken()
-    {
-        if (!$this->accessToken) {
-            $this->accessToken = $this->get('/sns/gettoken', [
-                'appid' => $this->appId,
-                'appsecret' => $this->appSecret
-            ])['access_token'];
-        }
-
-        return $this->accessToken;
-    }
-
-    /**
-     * @param $tmp_auth_code
-     * @return array|string
-     * 返回例子
-     * "errcode": 0,
-     * "errmsg": "ok",
-     * "openid": "liSii8KCxxxxx",
-     * "persistent_code": "dsa-d-asdasdadHIBIinoninINIn-ssdasd",
-     * "unionid": "7Huu46kk"
-     */
-    public function getPersistentCode($tmp_auth_code)
-    {
-        return $this->postJson("/sns/get_persistent_code?access_token={$this->getSnsAccessToken()}", compact('tmp_auth_code'));
-    }
-
-    /**
-     * @param $openid
-     * @param $persistent_code
-     * @return string
-     */
-    public function getSnsToken($openid, $persistent_code)
-    {
-        $response = $this->postJson("/sns/get_sns_token?access_token={$this->getSnsAccessToken()}",
-            compact('openid', 'persistent_code'));
-        return $response['sns_token'];
-    }
-
-    /**
-     * @param $code 前台获取的 code
-     * @return array|string
-     */
-    public function getUserInfo($code)
-    {
-        $persistent = $this->getPersistentCode($code);
-        return $this->get('/sns/getuserinfo', [
-            'sns_token' => $this->getSnsToken($persistent['openid'], $persistent['persistent_code'])
-        ]);
     }
 
     /**
@@ -101,5 +41,23 @@ class Socialite extends BaseClient
                 'response_type' => 'code',
                 'scope' => 'snsapi_login',
             ]) . "&redirect_uri={$url}";
+    }
+
+    public function getUserInfoByCode($tmp_auth_code)
+    {
+        $timestamp = round(microtime(true) * 1000);
+        $response = $this->postJson("/sns/getuserinfo_bycode?signature={$this->getSignature($timestamp)}&timestamp={$timestamp}&accessKey={$this->appId}",
+            compact('tmp_auth_code')
+        );
+
+        return $response['user_info'];
+    }
+
+    // 根据timestamp, appSecret计算签名值
+    private function getSignature($timestamp)
+    {
+        $s = hash_hmac('sha256', $timestamp, $this->appSecret, true);
+        $signature = base64_encode($s);
+        return urlencode($signature);
     }
 }
