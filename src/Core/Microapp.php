@@ -18,7 +18,7 @@ class Microapp extends BaseClient
     public function __construct($token, $name, Config $config)
     {
         parent::__construct($token);
-        $this->agentId = $config->get('microapp.' . $name);
+        $this->agentId = $config->get("app.{$name}.agentId");
     }
 
     // 相同内容对同一个用户发送有频率限制
